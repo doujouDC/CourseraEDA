@@ -1,0 +1,58 @@
+---
+title: "eda_week_01"
+author: "Doug Joubert"
+date: "October 15, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Week 01: Exploratory Graphs (Part 1)
+Read in some EPA Data
+```{r}
+library(tidyverse)
+pollution <- read.csv("data/avgpm25.csv")
+str(pollution)
+```
+
+I need to coererce the fips variable to character
+```{r}
+pollution$fips <- as.character(pollution$fips)
+str(pollution)
+head(pollution)
+```
+
+I guess I could do a simply boxplot of the pm25, with a summary table
+```{r}
+summary(pollution$pm25)
+boxplot(pollution$pm25)
+abline(h = 12) # this a/b line can be set to the value we are looking for, 12
+```
+
+So, this tells us that some are over the limit and some are under the limit. So, let us try a histogram
+
+```{r}
+hist(pollution$pm25, col = "light green")
+rug(pollution$pm25) # need to run this as chunk, meaning the plot needs to be showing for rug to work
+```
+
+Let us experiment with changing the width of the bars in the histogram
+```{r}
+hist(pollution$pm25, col = "light green", breaks = 50) # makes the bars smaller, do not want the number to be too big or too small
+```
+
+You can also experiment with overlays on the histogram
+```{r}
+hist(pollution$pm25, col = "light green")
+abline(v = 12, col = "red", lwd = 4) # Vertical line at 12
+abline(v = median(pollution$pm25), col = "blue", lwd = 4) # Blue line at the median
+```
+
+A Barplot is another example, that can be use for categorical data
+```{r}
+barplot(table(pollution$region), col = "light blue", main = "Number of Counties in Each Region")
+```
+
+To get this work you can either create a table with the variable, or build the table into the barplot function
