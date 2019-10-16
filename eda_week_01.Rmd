@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Read in some EPA Data
 ```{r}
 library(tidyverse)
-pollution <- read.csv("data/avgpm25.csv")
+pollution <- read_csv("data/avgpm25.csv")
 str(pollution)
 ```
 
@@ -24,6 +24,10 @@ str(pollution)
 head(pollution)
 ```
 
+## One-dimension Summaries
+
+### Boxplots
+
 I guess I could do a simply boxplot of the pm25, with a summary table
 ```{r}
 summary(pollution$pm25)
@@ -31,6 +35,7 @@ boxplot(pollution$pm25)
 abline(h = 12) # this a/b line can be set to the value we are looking for, 12
 ```
 
+### Histograms
 So, this tells us that some are over the limit and some are under the limit. So, let us try a histogram
 
 ```{r}
@@ -50,9 +55,62 @@ abline(v = 12, col = "red", lwd = 4) # Vertical line at 12
 abline(v = median(pollution$pm25), col = "blue", lwd = 4) # Blue line at the median
 ```
 
+### Barplot
 A Barplot is another example, that can be use for categorical data
 ```{r}
 barplot(table(pollution$region), col = "light blue", main = "Number of Counties in Each Region")
 ```
 
 To get this work you can either create a table with the variable, or build the table into the barplot function
+
+## Two-dimensional Summaries
+
+### Multiple Overlays
+
+### Boxplots with more that one Dimensions
+
+This time (because we are displaying two boxplots), we modify the code that we previously used for the boxplot
+
+```{r}
+boxplot(pm25 ~ region, data = pollution, col = "light green")
+```
+
+This allows us to see that when compared to each region, the east region has a pm25 that is a little larger. Although, all of the extreme values are in the west region. The west region also has more spread, since the box is larger.
+
+### Histograms with more that one Dimensions
+
+```{r}
+par(mfrow = c(2, 1), mar = c(4, 4, 2, 1))
+hist(subset(pollution, region == "east") $pm25, col = "light green")
+hist(subset(pollution, region == "west") $pm25, col = "light green")
+```
+
+
+
+### Scatterplots
+
+```{r}
+with(pollution, plot(latitude, pm25))
+abline(h = 12, lwd = 2, lty = 2)
+```
+
+Of course, the instructor (again) explains absolutely nothing about the code that he uses in his example. So, I created the plot using ggplot
+
+
+```{r}
+# Or with the tidyverse
+ggplot(data = pollution, mapping = aes(x = latitude, y = pm25)) +
+  geom_point(mapping = aes(col = region)) +
+  geom_smooth(method = lm, se=FALSE)
+```
+
+Then, I can use faceting to view the data using multiple scatterplots
+
+```{r}
+ggplot(data = pollution, mapping = aes(x = latitude, y = pm25)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  facet_wrap(~region)
+```
+
+### Using Color, Size, and Shape to add Dimensions
