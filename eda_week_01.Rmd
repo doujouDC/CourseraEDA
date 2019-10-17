@@ -113,4 +113,26 @@ ggplot(data = pollution, mapping = aes(x = latitude, y = pm25)) +
   facet_wrap(~region)
 ```
 
-### Using Color, Size, and Shape to add Dimensions
+# Plotting Systems in R
+Basic example using base R
+
+```{r}
+library(datasets)
+data("cars")
+with(cars, plot(x = speed, y = dist))
+```
+
+Basic example using lattice package
+```{r}
+library(lattice)
+state <- data.frame(state.x77, region = state.region)
+xyplot(Life.Exp ~ Income | region, data = state, layout = c(columns = 4, rows = 1))
+```
+
+Basic example using base ggpolot
+```{r}
+library(tidyverse)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point()
+```
+
